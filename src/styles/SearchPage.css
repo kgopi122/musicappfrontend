@@ -1,0 +1,100 @@
+/* You May Also Like section styles */
+.related-songs-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.related-songs-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+}
+
+.related-songs-section .search-result {
+  margin-top: 0;
+}
+
+.related-songs-section .song-item {
+  background-color: var(--background-secondary);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.related-songs-section .song-item:hover {
+  background-color: var(--hover);
+  transform: translateY(-2px);
+}
+
+.related-songs-section .song-item.active {
+  background-color: var(--hover);
+}
+
+/* Download Toast Styles */
+.download-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  z-index: 1000;
+  animation: toastSlideIn 0.3s ease-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.download-toast.info {
+  background-color: #2196F3;
+}
+
+.download-toast.success {
+  background-color: #4CAF50;
+}
+
+.download-toast.error {
+  background-color: #f44336;
+}
+
+.download-toast.fade-out {
+  animation: toastSlideOut 0.3s ease-in forwards;
+}
+
+@keyframes toastSlideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.download-progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.download-progress .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+} 

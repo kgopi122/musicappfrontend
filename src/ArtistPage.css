@@ -1,0 +1,411 @@
+#artistPage {
+  min-height: 100vh;
+  background-color: #070101;
+  color: white;
+  padding-top: 100px;
+}
+
+#artistPage-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#artistPage-details {
+  position: relative;
+  margin-bottom: 40px;
+  border-radius: 15px;
+  overflow: hidden;
+}
+
+.background-video-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+}
+
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.background-video.loaded {
+  opacity: 0.3;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(7, 1, 1, 0.7), rgba(7, 1, 1, 0.9));
+}
+
+.video-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.2rem;
+}
+
+#artistPage-details-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 30px;
+  z-index: 1;
+}
+
+.artist-details-main {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+}
+
+.artistPage-image-container {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.artistPage-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#artistPage-info {
+  flex: 1;
+}
+
+#artistPage-info h2 {
+  font-size: 3rem;
+  margin: 0;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.artist-stats {
+  font-size: 1.2rem;
+  color: #888;
+  margin: 5px 0;
+}
+
+.artist-description {
+  font-size: 1.1rem;
+  color: #aaa;
+  margin: 5px 0;
+}
+
+.artist-controls {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.control-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.control-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.control-button svg {
+  font-size: 1.2rem;
+  color: white;
+}
+
+.control-button svg.active {
+  color: #00ffff;
+}
+
+.artist-songs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  padding: 8px 15px;
+  width: 300px;
+}
+
+.search-bar svg {
+  color: #888;
+  margin-right: 10px;
+}
+
+.search-bar input {
+  background: none;
+  border: none;
+  color: white;
+  width: 100%;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: #888;
+}
+
+.sort-filter {
+  display: flex;
+  gap: 10px;
+}
+
+.sort-button,
+.filter-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sort-button:hover,
+.filter-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sort-button svg,
+.filter-button svg {
+  color: white;
+  font-size: 1.2rem;
+}
+
+.filters-panel {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-section {
+  margin-bottom: 15px;
+}
+
+.filter-section h4 {
+  margin: 0 0 10px 0;
+  color: #888;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 5px 0;
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.3s ease;
+}
+
+.filter-option:hover {
+  color: white;
+}
+
+.filter-option input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #888;
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.filter-option input[type="checkbox"]:checked {
+  background: #00ffff;
+  border-color: #00ffff;
+}
+
+.filter-option input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #070101;
+  font-size: 12px;
+}
+
+.artist-songs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.artist-song-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.artist-song-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.artist-song-item.selected-song {
+  background: rgba(0, 255, 255, 0.1);
+  border-left: 3px solid #00ffff;
+}
+
+.song-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.song-info img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.song-info h4 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.movie-name {
+  color: #888;
+  margin: 5px 0 0 0;
+  font-size: 0.9rem;
+}
+
+.song-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.control-button-like,
+.song-action-button {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-button-like:hover,
+.song-action-button:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+.control-button-like.liked {
+  color: #ff4d4d;
+}
+
+.song-action-button.added {
+  color: #00ffff;
+}
+
+.duration {
+  color: #888;
+  font-size: 0.9rem;
+  min-width: 45px;
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  #artistPage-info h2 {
+    font-size: 2rem;
+  }
+
+  .artistPage-image-container {
+    width: 150px;
+    height: 150px;
+  }
+
+  .search-bar {
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .artist-details-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .artistPage-image-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  #artistPage-info h2 {
+    font-size: 1.8rem;
+  }
+
+  .search-bar {
+    width: 150px;
+  }
+
+  .song-info img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .song-info h4 {
+    font-size: 1rem;
+  }
+
+  .song-actions {
+    gap: 10px;
+  }
+} 

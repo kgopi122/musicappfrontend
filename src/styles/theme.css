@@ -1,0 +1,186 @@
+:root[data-theme="light"] {
+  --background: #f5f5f5;
+  --background-secondary: #ffffff;
+  --background-hover: #f0f0f0;
+  --text: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --text-inverse: #ffffff;
+  --border: #e0e0e0;
+  --primary: #1db954;
+  --primary-hover: #1ed760;
+  --error: #ff4444;
+  --input-background: #ffffff;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --card-background: #ffffff;
+  --header-background: #ffffff;
+  --player-background: #ffffff;
+  --player-controls: #333333;
+  --player-progress: #e0e0e0;
+  --player-progress-fill: #1db954;
+  --search-background: #ffffff;
+  --search-border: #e0e0e0;
+  --search-text: #333333;
+  --search-placeholder: #666666;
+  --dropdown-background: #ffffff;
+  --dropdown-hover: #f0f0f0;
+  --dropdown-border: #e0e0e0;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-track: #f1f1f1;
+  
+  /* Font sizes */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  
+  /* Font weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+:root[data-theme="dark"] {
+  --background: #121212;
+  --background-secondary: #181818;
+  --background-hover: #282828;
+  --text: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-muted: #808080;
+  --text-inverse: #333333;
+  --border: #282828;
+  --primary: #1db954;
+  --primary-hover: #1ed760;
+  --error: #ff4444;
+  --input-background: #282828;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --card-background: #181818;
+  --header-background: #000000;
+  --player-background: #181818;
+  --player-controls: #ffffff;
+  --player-progress: #4f4f4f;
+  --player-progress-fill: #1db954;
+  --search-background: #282828;
+  --search-border: #404040;
+  --search-text: #ffffff;
+  --search-placeholder: #b3b3b3;
+  --dropdown-background: #282828;
+  --dropdown-hover: #404040;
+  --dropdown-border: #404040;
+  --scrollbar-thumb: #404040;
+  --scrollbar-track: #282828;
+  
+  /* Font sizes - same as light theme for consistency */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+  
+  /* Font weights - same as light theme */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+}
+
+/* Global styles */
+body {
+  background-color: var(--background);
+  color: var(--text);
+  font-size: var(--font-size-base);
+  transition: background-color 0.3s ease, color 0.3s ease, font-size 0.3s ease;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 1rem;
+}
+
+h1 { font-size: var(--font-size-4xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+h4 { font-size: var(--font-size-xl); }
+h5 { font-size: var(--font-size-lg); }
+h6 { font-size: var(--font-size-base); }
+
+p {
+  color: var(--text);
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+}
+
+label {
+  color: var(--text);
+  font-size: var(--font-size-base);
+}
+
+button {
+  color: var(--text);
+  font-size: var(--font-size-base);
+}
+
+input, select, textarea {
+  color: var(--text);
+  font-size: var(--font-size-base);
+}
+
+/* Component-specific text colors */
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+.text-inverse { color: var(--text-inverse); }
+
+/* Font size utility classes */
+.text-xs { font-size: var(--font-size-xs); }
+.text-sm { font-size: var(--font-size-sm); }
+.text-base { font-size: var(--font-size-base); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-2xl { font-size: var(--font-size-2xl); }
+.text-3xl { font-size: var(--font-size-3xl); }
+.text-4xl { font-size: var(--font-size-4xl); }
+
+/* Font weight utility classes */
+.font-normal { font-weight: var(--font-weight-normal); }
+.font-medium { font-weight: var(--font-weight-medium); }
+.font-semibold { font-weight: var(--font-weight-semibold); }
+.font-bold { font-weight: var(--font-weight-bold); }
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Global transitions */
+* {
+  transition: background-color 0.3s ease, 
+              color 0.3s ease, 
+              border-color 0.3s ease, 
+              box-shadow 0.3s ease,
+              font-size 0.3s ease;
+} 

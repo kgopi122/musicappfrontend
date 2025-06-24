@@ -1,0 +1,637 @@
+/* GenrePage Styles */
+.genre-page {
+  /* max-width: 800px; */
+  /* margin: 20px auto; */
+  text-align: center;
+  font-family: 'Arial', sans-serif;
+}
+
+.genre-page h2 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.genre-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 15px;
+  /* margin: 20px auto; */
+  display: block;
+}
+
+/* button {
+  background-color: #ff5722;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #e64a19;
+} */
+
+.genre-songs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  align-items: center;
+  justify-content:center;
+
+}
+
+.song-card {
+  display: flex;
+  align-items: center;
+  width:60%;
+  height:60px;
+  /* margin-left:20%; */
+  padding: 12px;
+  /* background: #282828; */
+  border-radius: 10px;
+  cursor: pointer;
+  justify-content: space-between;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.song-card:hover {
+  /* transform: scale(1.02);
+  box-shadow: 0 4px 8px rgba(255, 87, 34, 0.4); */
+  background-color: rgb(45, 44, 44);
+}
+
+.song-card img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-right: 15px;
+}
+
+.song-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.song-card h3 {
+  font-size: 18px;
+  margin: 0;
+  color: #fff;
+}
+
+.song-card p {
+  font-size: 14px;
+  color: #ccc;
+  margin: 5px 0 0;
+}
+.add-download{
+  display: flex;
+  justify-content: end;
+}
+#song-image-name{
+  display: flex;
+  align-items: center;
+}
+
+#genrePage {
+  min-height: 100vh;
+  background-color: #070101;
+  color: white;
+  padding-top: 80px;
+}
+
+#genrePage-main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#genrePage-details {
+  position: relative;
+  margin-bottom: 40px;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.background-video-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+}
+
+.background-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+.background-video.loaded {
+  opacity: 1;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+}
+
+.video-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 1.2rem;
+}
+
+#genrePage-details-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+  z-index: 1;
+}
+
+.genre-details-main {
+  display: flex;
+  align-items: flex-end;
+  gap: 30px;
+}
+
+.genrePage-image-container {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.genrePage-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#genrePage-info {
+  flex: 1;
+}
+
+#genrePage-info h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 10px 0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.genre-description {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin: 0 0 10px 0;
+}
+
+.song-count {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+#genre-songs {
+  padding: 20px 0;
+}
+
+#genre-songs h3 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.genre-songs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.genre-song-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.genre-song-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(5px);
+}
+
+.genre-song-item.selected-song {
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.genre-song-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.genre-song-info img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.genre-song-info h4 {
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+}
+
+.genre-song-info p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.genre-song-info .movie-name {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.add-download {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.control-button-like,
+.song-action-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+  transition: all 0.3s ease;
+}
+
+.control-button-like:hover,
+.song-action-button:hover {
+  color: #0ff;
+  transform: scale(1.1);
+}
+
+.control-button-like.liked {
+  color: #ff4444;
+}
+
+.song-action-button.added {
+  color: #0ff;
+}
+
+.duration {
+  color: #888;
+  font-size: 0.9rem;
+  min-width: 45px;
+  text-align: right;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .genre-details-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .genrePage-image-container {
+    width: 150px;
+    height: 150px;
+  }
+
+  #genrePage-info h2 {
+    font-size: 2rem;
+  }
+
+  .genre-description {
+    font-size: 1rem;
+  }
+
+  .genre-song-info img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .genre-song-info h4 {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  #genrePage-details-container {
+    padding: 20px;
+  }
+
+  .genrePage-image-container {
+    width: 120px;
+    height: 120px;
+  }
+
+  #genrePage-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .add-download {
+    gap: 10px;
+  }
+
+  .control-button-like,
+  .song-action-button {
+    font-size: 1rem;
+  }
+}
+
+/* Add new styles for the enhanced features */
+.genre-controls {
+  display: flex;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.control-button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.control-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: scale(1.1);
+}
+
+.control-button.active {
+  color: #0ff;
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.genre-songs-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.genre-songs-controls {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-bar {
+  position: relative;
+  min-width: 250px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 8px 35px 8px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #0ff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.search-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1.1rem;
+}
+
+.filter-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #0ff;
+}
+
+.sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sort-select {
+  padding: 8px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sort-select:focus {
+  outline: none;
+  border-color: #0ff;
+}
+
+.sort-button {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.sort-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #0ff;
+}
+
+.filters-panel {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section:last-child {
+  margin-bottom: 0;
+}
+
+.filter-section h4 {
+  margin: 0 0 10px 0;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.filter-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.filter-option input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.filter-option input[type="checkbox"]:checked {
+  background: #0ff;
+  border-color: #0ff;
+}
+
+.filter-option input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #000;
+  font-size: 12px;
+}
+
+/* Responsive Design Updates */
+@media (max-width: 768px) {
+  .genre-songs-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .genre-songs-controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-bar {
+    width: 100%;
+  }
+
+  .filter-button,
+  .sort-controls {
+    width: 100%;
+  }
+
+  .sort-controls {
+    justify-content: space-between;
+  }
+
+  .filter-options {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .genre-controls {
+    justify-content: center;
+  }
+
+  .control-button {
+    font-size: 1rem;
+  }
+
+  .genre-song-info img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .genre-song-info h4 {
+    font-size: 0.9rem;
+  }
+
+  .genre-song-info p {
+    font-size: 0.8rem;
+  }
+}

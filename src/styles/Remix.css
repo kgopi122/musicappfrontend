@@ -1,0 +1,412 @@
+.remix-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+.remix-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #2a2a2a;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.header-left h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1db954;
+}
+
+.transport-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.transport-controls button {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.transport-controls button:hover {
+  background-color: #3a3a3a;
+}
+
+.tempo-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tempo-control input {
+  width: 100px;
+}
+
+.time-signature select {
+  background-color: #3a3a3a;
+  color: #fff;
+  border: 1px solid #4a4a4a;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.header-right {
+  display: flex;
+  gap: 1rem;
+}
+
+.header-right button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #3a3a3a;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.header-right button:hover {
+  background-color: #4a4a4a;
+}
+
+.remix-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.track-list {
+  width: 250px;
+  background-color: #2a2a2a;
+  border-right: 1px solid #3a3a3a;
+  overflow-y: auto;
+}
+
+.track {
+  border-bottom: 1px solid #3a3a3a;
+  cursor: pointer;
+}
+
+.track.selected {
+  background-color: #3a3a3a;
+}
+
+.track-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  color: #fff;
+}
+
+.track-controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.track-controls button {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.track-controls button:hover {
+  background-color: #4a4a4a;
+}
+
+.track-content {
+  padding: 0.75rem;
+}
+
+.track-fader {
+  margin-bottom: 0.5rem;
+}
+
+.track-fader input {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  background: #4a4a4a;
+  border-radius: 2px;
+  outline: none;
+}
+
+.track-fader input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #1db954;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.track-waveform {
+  height: 60px;
+  background-color: #3a3a3a;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.timeline {
+  flex: 1;
+  background-color: #2a2a2a;
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-ruler {
+  height: 30px;
+  background-color: #3a3a3a;
+  border-bottom: 1px solid #4a4a4a;
+}
+
+.timeline-tracks {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.timeline-track {
+  height: 100px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.automation {
+  height: 150px;
+  background-color: #2a2a2a;
+  border-top: 1px solid #3a3a3a;
+}
+
+.mixer-panel {
+  width: 300px;
+  background-color: #2a2a2a;
+  border-left: 1px solid #3a3a3a;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mixer-channel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.channel-fader {
+  height: 150px;
+  display: flex;
+  align-items: center;
+}
+
+.channel-fader input {
+  writing-mode: bt-lr;
+  -webkit-appearance: slider-vertical;
+  width: 20px;
+  height: 150px;
+  background: #4a4a4a;
+  border-radius: 10px;
+  outline: none;
+}
+
+.master-channel {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid #3a3a3a;
+}
+
+.effects-panel {
+  width: 300px;
+  background-color: #2a2a2a;
+  border-left: 1px solid #3a3a3a;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.effect-group {
+  margin-bottom: 1.5rem;
+}
+
+.effect-group h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #1db954;
+}
+
+.eq-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.eq-band {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.eq-band label {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+.dynamics-controls,
+.modulation-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.control label {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+.control input {
+  width: 100%;
+  height: 4px;
+  -webkit-appearance: none;
+  background: #4a4a4a;
+  border-radius: 2px;
+  outline: none;
+}
+
+.control input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #1db954;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.vst-panel {
+  width: 300px;
+  background-color: #2a2a2a;
+  border-left: 1px solid #3a3a3a;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.vst-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.vst-interface {
+  height: 300px;
+  background-color: #3a3a3a;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.export-panel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #2a2a2a;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.export-panel h2 {
+  margin-bottom: 1.5rem;
+  color: #1db954;
+}
+
+.export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option label {
+  font-size: 0.875rem;
+  color: #999;
+}
+
+.option select {
+  background-color: #3a3a3a;
+  color: #fff;
+  border: 1px solid #4a4a4a;
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.export-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.export-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.export-actions button:first-child {
+  background-color: #1db954;
+  color: #fff;
+  border: none;
+}
+
+.export-actions button:first-child:hover {
+  background-color: #1ed760;
+}
+
+.export-actions button:last-child {
+  background-color: #3a3a3a;
+  color: #fff;
+  border: none;
+}
+
+.export-actions button:last-child:hover {
+  background-color: #4a4a4a;
+} 

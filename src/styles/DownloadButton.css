@@ -1,0 +1,59 @@
+.download-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+.download-button:hover {
+  color: var(--text-primary);
+  background-color: var(--hover);
+}
+
+.download-button.small {
+  font-size: 1rem;
+  padding: 6px;
+}
+
+.download-button.medium {
+  font-size: 1.2rem;
+  padding: 8px;
+}
+
+.download-button.large {
+  font-size: 1.5rem;
+  padding: 10px;
+}
+
+/* Play bar specific styles */
+.play-bar .download-button {
+  color: var(--text-primary);
+  opacity: 0.8;
+}
+
+.play-bar .download-button:hover {
+  opacity: 1;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Song item specific styles */
+.song-item .download-button {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.song-item:hover .download-button {
+  opacity: 1;
+}
+
+/* Active song styles */
+.song-item.active .download-button {
+  opacity: 1;
+  color: var(--text-primary);
+} 
