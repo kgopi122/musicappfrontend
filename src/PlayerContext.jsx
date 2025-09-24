@@ -74,9 +74,10 @@ export const PlayerProvider = ({ children }) => {
       audioRef.current.currentTime = 0;
       setProgress(0);
       
-      // Fix the audio source path
-      const fixedPath = currentSong.audioSrc.startsWith('/') ? currentSong.audioSrc : `/${currentSong.audioSrc}`;
-      audioRef.current.src = fixedPath;
+      // Support absolute Azure URLs and local paths
+      const src = currentSong.audioSrc;
+      const isAbsolute = /^https?:\/\//i.test(src);
+      audioRef.current.src = isAbsolute ? src : (src.startsWith('/') ? src : `/${src}`);
       audioRef.current.load();
       
       // Start playing if isPlaying is true

@@ -21,6 +21,7 @@ import {
   faRotateRight
 } from '@fortawesome/free-solid-svg-icons';
 import './Playbar.css';
+import { AZURE_CONFIG } from './config/azure';
 
 const Playbar = () => {
   const { 
@@ -167,7 +168,7 @@ const Playbar = () => {
         {/* Left section - Song info */}
         <div className="song-info">
           <img 
-            src={currentSong?.image || '/default-album.png'} 
+            src={currentSong?.image || '/vibe-guru-logo.png'} 
             alt={currentSong?.title || 'No song playing'} 
             className="song-thumbnail"
           />

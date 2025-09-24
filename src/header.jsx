@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { AZURE_CONFIG } from './config/azure';
 import { Link, useNavigate } from 'react-router-dom';
 import { PiMagnifyingGlass, PiUser, PiSignOut, PiHouse, PiBooks, PiCompass, PiGearSix } from 'react-icons/pi';
 import { useLanguage } from './contexts/LanguageContext';
@@ -72,7 +73,7 @@ const Header = () => {
       <div className="header-container">
         <div className="header-left">
           <Link to="/" className="logo">
-            <img src="/vibe-guru-logo.png" alt="Logo" />
+            <img src={AZURE_CONFIG.getImageUrl('vibe-guru-logo.png')} alt="Logo" />
             <span className="logo-text">VibeGuru</span>
           </Link>
           </div>

@@ -1,31 +1,29 @@
 // Azure Storage Configuration
 export const AZURE_CONFIG = {
   // Your actual Azure Storage account details
-  STORAGE_ACCOUNT_NAME: 'musicapplication', // Your Azure Storage account name
-  CONTAINER_NAME: 'music-files', // Your container name for music files
-  BLOB_ENDPOINT: 'https://musicapplication.blob.core.windows.net', // Your blob endpoint
-  
-  // Helper function to build full Azure Storage URLs
-  getBlobUrl: (fileName) => {
-    return `${AZURE_CONFIG.BLOB_ENDPOINT}/${AZURE_CONFIG.CONTAINER_NAME}/${fileName}`;
-  },
-  
-  // Helper function to get image URL
+  STORAGE_ACCOUNT_NAME: 'musicapplication',
+  BLOB_ENDPOINT: 'https://musicapplication.blob.core.windows.net',
+
+  // Containers per your setup
+  IMAGE_CONTAINER: 'images',
+  SONGS_CONTAINER: 'songs',
+
+  // Helper function to build full Azure Storage URLs for images
   getImageUrl: (imageName) => {
-    return `${AZURE_CONFIG.BLOB_ENDPOINT}/images/${imageName}`;
+    return `${AZURE_CONFIG.BLOB_ENDPOINT}/${AZURE_CONFIG.IMAGE_CONTAINER}/${encodeURIComponent(imageName)}`;
   },
-  
-  // Helper function to get audio URL
+
+  // Helper function to build full Azure Storage URLs for audio
   getAudioUrl: (audioName) => {
-    return `${AZURE_CONFIG.BLOB_ENDPOINT}/songs/${audioName}`;
+    return `${AZURE_CONFIG.BLOB_ENDPOINT}/${AZURE_CONFIG.SONGS_CONTAINER}/${encodeURIComponent(audioName)}`;
   },
-  
-  // Helper function to get artist image URL
+
+  // Artist images live in the images container
   getArtistImageUrl: (artistImageName) => {
-    return `${AZURE_CONFIG.BLOB_ENDPOINT}/images/${artistImageName}`;
+    return `${AZURE_CONFIG.BLOB_ENDPOINT}/${AZURE_CONFIG.IMAGE_CONTAINER}/${encodeURIComponent(artistImageName)}`;
   }
 };
 
 // Example usage:
 // AZURE_CONFIG.getImageUrl('all_hail.jpeg') 
-// Returns: https://yourstorageaccount.blob.core.windows.net/music-files/images/all_hail.jpeg
+// Returns: https://musicapplication.blob.core.windows.net/images/all_hail.jpeg
