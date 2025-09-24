@@ -24,7 +24,7 @@ const App = () => {
       <ThemeProvider>
         <LibraryProvider>
           <PlayerProvider>
-            <Router>
+            <Router basename='/music'>
               <div className="app">
                 
                 <Routes>
