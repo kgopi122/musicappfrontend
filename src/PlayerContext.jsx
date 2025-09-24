@@ -107,6 +107,7 @@ export const PlayerProvider = ({ children }) => {
       if (playPromise !== undefined) {
         playPromise.catch(error => {
           console.error("Error playing audio:", error);
+          console.error(`Current song audio source: ${currentSong?.audioSrc}`);
           setIsPlaying(false);
         });
       }

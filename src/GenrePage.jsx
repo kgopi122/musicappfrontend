@@ -90,6 +90,7 @@ const GenrePage = () => {
 
           const audio = new Audio();
           audio.preload = "metadata";
+          audio.crossOrigin = 'anonymous';
 
           const timeoutId = setTimeout(() => {
             resolve({ index, duration: song.duration || '--:--' });
@@ -109,8 +110,8 @@ const GenrePage = () => {
             resolve({ index, duration: song.duration || '--:--' });
           });
 
-          const fixedPath = song.audioSrc.startsWith('/') ? song.audioSrc : `/${song.audioSrc}`;
-          audio.src = fixedPath;
+          // Use the audio source path directly (Azure Storage URLs are already correct)
+          audio.src = song.audioSrc;
         });
       });
 
