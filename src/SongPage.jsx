@@ -13,7 +13,6 @@ import './Playbar.css';
 import Header from './header';
 import { LibraryContext } from './LibraryContext';
 import { PlayerContext } from './PlayerContext';
-import { songs } from './data';
 
 // Song video mapping
 const songVideos = {
@@ -67,38 +66,21 @@ const SongPage = () => {
   // Combine main song with recommended songs and set up playlist
   useEffect(() => {
     if (initialSong) {
-      // Get all songs from the same movie
-      const movieSongs = songs.filter(song =>
+      // Get all songs from the same movie from the current playlist context if available
+      const movieSongs = (allSongs.length > 0 ? allSongs : [initialSong]).filter(song =>
         song.movieName === initialSong.movieName
       );
 
-      // Sort songs to maintain consistent order
       const sortedMovieSongs = movieSongs.sort((a, b) => a.id - b.id);
-
       setAllSongs(sortedMovieSongs);
 
-      // Set current video
       setCurrentVideo(songVideos[initialSong.title] || songVideos.default);
-
-      // Set the initial playlist with only songs from the same movie
       setCurrentPlaylist(sortedMovieSongs);
 
-      // Get songs with same artist or genre for "You May Also Like" section
-      const similarSongs = songs.filter(song =>
-        song.id !== initialSong.id && // Exclude current song
-        (song.artist === initialSong.artist || song.genre === initialSong.genre)
+      const similarSongs = sortedMovieSongs.filter(song =>
+        song.id !== initialSong.id && (song.artist === initialSong.artist || song.genre === initialSong.genre)
       );
-
-      // Sort similar songs by relevance (artist match first, then genre)
-      const sortedSimilarSongs = similarSongs.sort((a, b) => {
-        const aArtistMatch = a.artist === initialSong.artist;
-        const bArtistMatch = b.artist === initialSong.artist;
-        if (aArtistMatch && !bArtistMatch) return -1;
-        if (!aArtistMatch && bArtistMatch) return 1;
-        return 0;
-      });
-
-      // Update the recommended songs state
+      const sortedSimilarSongs = similarSongs; 
       setRecommendedSongs(sortedSimilarSongs);
     }
   }, [initialSong, setCurrentPlaylist]);
@@ -166,7 +148,7 @@ const SongPage = () => {
     event.stopPropagation();
     
     // Create a new playlist starting from the clicked song
-    const newPlaylist = songs.slice(index);
+    const newPlaylist = allSongs.slice(index);
     setCurrentSong(recSong);
     setPlaylist(newPlaylist);
     play();

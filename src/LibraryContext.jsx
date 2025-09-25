@@ -1,5 +1,5 @@
 // LibraryContext.js
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useMemo } from 'react';
 
 // Helper functions for local storage
 const getStorageKey = (userId, type) => `musicapp_${userId}_${type}`;
@@ -115,6 +115,8 @@ export const LibraryProvider = ({ children }) => {
   };
 
   const setUser = (email) => {
+    // Idempotent: avoid loops if the same email is set repeatedly
+    if (email === userId) return;
     setUserId(email);
     // Load user's songs when setting a new user
     const userLikedSongs = loadFromStorage(email, 'likedSongs');
@@ -129,7 +131,7 @@ export const LibraryProvider = ({ children }) => {
     setPlaylistSongs([]);
   };
 
-  const value = {
+  const value = useMemo(() => ({
     likedSongs,
     setLikedSongs,
     playlistSongs,
@@ -141,7 +143,7 @@ export const LibraryProvider = ({ children }) => {
     removeFromLikedSongs,
     addToPlaylist,
     removeFromPlaylist
-  };
+  }), [likedSongs, playlistSongs, userId]);
 
   return (
     <LibraryContext.Provider value={value}>

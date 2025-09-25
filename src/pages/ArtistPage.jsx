@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaPlay, FaPause, FaHeart, FaRegHeart, FaPlus, FaCheck, FaMusic, FaCalendarAlt, FaLanguage, FaFilter, FaSort, FaSearch } from 'react-icons/fa';
 import { PlayerContext } from '../PlayerContext';
-import { getSongsByArtist } from '../data';
+import { songsApi, mapBackendSongs } from '../api';
 import './ArtistPage.css';
 
 const ArtistPage = () => {
@@ -24,24 +24,27 @@ const ArtistPage = () => {
   const [filterLanguage, setFilterLanguage] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
+  const [viewMode, setViewMode] = useState('list');
 
   useEffect(() => {
     const decodedArtistName = decodeURIComponent(artistName);
-    const songs = getSongsByArtist(decodedArtistName);
-    setArtistSongs(songs);
-    setFilteredSongs(songs);
-
-    if (songs.length > 0) {
-      setArtistInfo({
-        name: decodedArtistName,
-        image: songs[0].artistImage,
-        totalSongs: songs.length,
-        genres: [...new Set(songs.map(song => song.genre))],
-        languages: [...new Set(songs.map(song => song.language))],
-        years: [...new Set(songs.map(song => song.year))].sort((a, b) => b - a)
-      });
-    }
+    const load = async () => {
+      const data = await songsApi.getByArtist(decodedArtistName);
+      const songs = mapBackendSongs(data);
+      setArtistSongs(songs);
+      setFilteredSongs(songs);
+      if (songs.length > 0) {
+        setArtistInfo({
+          name: decodedArtistName,
+          image: songs[0].artistImage,
+          totalSongs: songs.length,
+          genres: [...new Set(songs.map(song => song.genre))],
+          languages: [...new Set(songs.map(song => song.language))],
+          years: [...new Set(songs.map(song => song.year))].sort((a, b) => b - a)
+        });
+      }
+    };
+    load();
 
     const userEmail = localStorage.getItem('userEmail');
     if (userEmail) {
@@ -54,32 +57,22 @@ const ArtistPage = () => {
 
   useEffect(() => {
     let filtered = [...artistSongs];
-
-    // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(song => 
         song.title.toLowerCase().includes(query) ||
-        song.movieName.toLowerCase().includes(query)
+        (song.movieName || '').toLowerCase().includes(query)
       );
     }
-
-    // Apply year filter
     if (filterYear !== 'all') {
       filtered = filtered.filter(song => song.year === parseInt(filterYear));
     }
-
-    // Apply genre filter
     if (filterGenre !== 'all') {
       filtered = filtered.filter(song => song.genre === filterGenre);
     }
-
-    // Apply language filter
     if (filterLanguage !== 'all') {
       filtered = filtered.filter(song => song.language === filterLanguage);
     }
-
-    // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
         case 'year':
@@ -87,14 +80,13 @@ const ArtistPage = () => {
         case 'title':
           return a.title.localeCompare(b.title);
         case 'duration':
-          return a.duration.localeCompare(b.duration);
+          return String(a.duration).localeCompare(String(b.duration));
         case 'movie':
-          return a.movieName.localeCompare(b.movieName);
+          return String(a.movieName).localeCompare(String(b.movieName));
         default:
           return 0;
       }
     });
-
     setFilteredSongs(filtered);
   }, [artistSongs, searchQuery, filterYear, filterGenre, filterLanguage, sortBy]);
 
@@ -118,11 +110,9 @@ const ArtistPage = () => {
       showToastMessage('Please login to like songs', 'error');
       return;
     }
-
     const updatedLikedSongs = likedSongs.includes(song.id)
       ? likedSongs.filter(id => id !== song.id)
       : [...likedSongs, song.id];
-
     setLikedSongs(updatedLikedSongs);
     localStorage.setItem(`likedSongs_${userEmail}`, JSON.stringify(updatedLikedSongs));
     showToastMessage(
@@ -137,12 +127,10 @@ const ArtistPage = () => {
       showToastMessage('Please login to add songs to playlist', 'error');
       return;
     }
-
     const isInPlaylist = playlistSongs.some(s => s.id === song.id);
     const updatedPlaylist = isInPlaylist
       ? playlistSongs.filter(s => s.id !== song.id)
       : [...playlistSongs, song];
-
     setPlaylistSongs(updatedPlaylist);
     localStorage.setItem(`playlist_${userEmail}`, JSON.stringify(updatedPlaylist));
     showToastMessage(

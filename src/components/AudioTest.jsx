@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { songs } from '../data';
+import { songsApi, mapBackendSongs } from '../api';
 
 const AudioTest = () => {
   const [testResults, setTestResults] = useState([]);
@@ -8,34 +8,39 @@ const AudioTest = () => {
   const testAudioUrls = async () => {
     setIsTesting(true);
     setTestResults([]);
-    
+
     const results = [];
-    
-    for (const song of songs.slice(0, 3)) { // Test first 3 songs
-      try {
-        const response = await fetch(song.audioSrc, { 
-          method: 'HEAD',
-          mode: 'cors'
-        });
-        
-        results.push({
-          song: song.title,
-          url: song.audioSrc,
-          status: response.ok ? 'SUCCESS' : 'FAILED',
-          statusCode: response.status,
-          error: null
-        });
-      } catch (error) {
-        results.push({
-          song: song.title,
-          url: song.audioSrc,
-          status: 'ERROR',
-          statusCode: null,
-          error: error.message
-        });
+
+    try {
+      const data = await songsApi.getAll();
+      const mapped = mapBackendSongs(data).slice(0, 3);
+      for (const song of mapped) {
+        try {
+          const response = await fetch(song.audioSrc, { 
+            method: 'HEAD',
+            mode: 'cors'
+          });
+          results.push({
+            song: song.title,
+            url: song.audioSrc,
+            status: response.ok ? 'SUCCESS' : 'FAILED',
+            statusCode: response.status,
+            error: null
+          });
+        } catch (error) {
+          results.push({
+            song: song.title,
+            url: song.audioSrc,
+            status: 'ERROR',
+            statusCode: null,
+            error: error.message
+          });
+        }
       }
+    } catch (e) {
+      results.push({ song: 'Fetch Error', url: '-', status: 'ERROR', statusCode: null, error: String(e) });
     }
-    
+
     setTestResults(results);
     setIsTesting(false);
   };

@@ -1,23 +1,36 @@
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { songs, genres, categories } from './data';
 import './MainPage.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMusic } from '@fortawesome/free-solid-svg-icons';
 import { PlayerContext } from './PlayerContext';
 import Header from './header';
 import { requireAuth } from './utils/auth';
+import { songsApi, mapBackendSongs } from './api';
 
 const Home = () => {
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [songsData, setSongsData] = useState([]);
   const navigate = useNavigate();
   const { setCurrentSong, setIsPlaying, setCurrentPlaylist } = useContext(PlayerContext);
 
-  // Get unique artists with their images and song counts
+  useEffect(() => {
+    let isMounted = true;
+    songsApi.getAll()
+      .then(data => {
+        if (!isMounted) return;
+        setSongsData(mapBackendSongs(data));
+      })
+      .catch(err => {
+        console.error('Failed to fetch songs:', err);
+        setSongsData([]);
+      });
+    return () => { isMounted = false; };
+  }, []);
+
   const uniqueArtists = useMemo(() => {
     const artistMap = new Map();
-    
-    songs.forEach(song => {
+    songsData.forEach(song => {
       if (!artistMap.has(song.artist)) {
         artistMap.set(song.artist, {
           name: song.artist,
@@ -29,20 +42,30 @@ const Home = () => {
         artist.songCount += 1;
       }
     });
-    
     return Array.from(artistMap.values());
-  }, [songs]);
+  }, [songsData]);
+
+  const genreCards = useMemo(() => {
+    const map = new Map();
+    for (const song of songsData) {
+      const name = (song.genre || '').trim();
+      if (!name) continue;
+      if (!map.has(name)) {
+        map.set(name, { name, image: song.image });
+      }
+    }
+    return Array.from(map.values());
+  }, [songsData]);
 
   const handleSongClick = (song) => {
     if (!requireAuth(navigate)) return;
     setCurrentSong(song);
     setIsPlaying(true);
-    setCurrentPlaylist(songs);
-    
+    setCurrentPlaylist(songsData);
     navigate(`/song/${encodeURIComponent(song.title)}`, {
       state: {
         song,
-        recommendedSongs: songs.filter(s => s.id !== song.id).slice(0, 5)
+        recommendedSongs: songsData.filter(s => s.id !== song.id).slice(0, 5)
       }
     });
     window.scrollTo(0, 0);
@@ -50,21 +73,13 @@ const Home = () => {
 
   const handleGenreClick = (genreName) => {
     if (!requireAuth(navigate)) return;
-    const genreSongs = genres[genreName]?.songs || [];
-    navigate(`/genre/${encodeURIComponent(genreName)}`, {
-      state: { 
-        genre: {
-          name: genreName,
-          songs: genreSongs
-        }
-      }
-    });
+    navigate(`/genre/${encodeURIComponent(genreName)}`);
     window.scrollTo(0, 0);
   };
 
   const handleArtistClick = (artist) => {
     if (!requireAuth(navigate)) return;
-    const artistSongs = songs.filter(song => song.artist === artist.name);
+    const artistSongs = songsData.filter(song => song.artist === artist.name);
     navigate(`/artist/${encodeURIComponent(artist.name)}`, {
       state: { 
         artist: {
@@ -79,7 +94,6 @@ const Home = () => {
 
   const handleNewFeatureClick = (feature) => {
     if (!requireAuth(navigate)) return;
-    
     switch(feature) {
       case 'post':
         navigate('/post-song');
@@ -99,19 +113,13 @@ const Home = () => {
     window.scrollTo(0, 0);
   };
 
-  // Create genre objects for display using the new genre structure
-  const genreObjects = Object.entries(genres).map(([key, genre]) => ({
-    name: genre.name,
-    image: genre.image
-  }));
-
   return (
     <>
       <div id="new_arrivalstext">
         <h2>New Arrivals</h2>
       </div>
       <div id="new_arrivalsmenu">
-        {songs.map((song, index) => (
+        {songsData.map((song, index) => (
           <div
             key={song.id}
             className="new-arrivals-item"
@@ -143,13 +151,15 @@ const Home = () => {
         <h2>Genres</h2>
       </div>
       <div id="genresmenu">
-        {genreObjects.map((genre, genreIndex) => (
+        {genreCards.map((genre, genreIndex) => (
           <div
-            key={genreIndex}
+            key={genre.name}
             className="genre"
             onClick={() => handleGenreClick(genre.name)}
           >
-            <img src={genre.image} alt={genre.name} className="genre-image" />
+            {genre.image && (
+              <img src={genre.image} alt={genre.name} className="genre-image" />
+            )}
             <div className="genre-info">
               <h3>{genre.name}</h3>
             </div>

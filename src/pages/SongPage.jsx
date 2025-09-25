@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { songs, getSongsByMovie } from '../data';
 import { usePlayer } from '../PlayerContext';
 import { useLibrary } from '../LibraryContext';
 import { PiPlay, PiPause, PiHeart, PiPlus, PiArrowLeft, PiHeartFill, PiPlusCircleFill, PiDownloadSimple } from 'react-icons/pi';
 import DownloadButton from '../components/DownloadButton';
 import DownloadQualityDropdown from '../components/DownloadQualityModal';
+import { songsApi, mapBackendSongs, mapBackendSongToFrontend } from '../api';
 import './SongPage.css';
 
 const SongPage = () => {
@@ -24,14 +24,12 @@ const SongPage = () => {
   const [selectedSong, setSelectedSong] = useState(null);
   const [downloadPosition, setDownloadPosition] = useState({ top: 0, left: 0 });
 
-  // Helper function to parse size string to bytes
   const parseSizeToBytes = (sizeStr) => {
     const units = { 'B': 1, 'KB': 1024, 'MB': 1024 * 1024, 'GB': 1024 * 1024 * 1024 };
     const [size, unit] = sizeStr.split(' ');
     return parseFloat(size) * units[unit];
   };
 
-  // Helper function to compress audio
   const compressAudio = async (audioBuffer, targetSize) => {
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     const offlineContext = new OfflineAudioContext(
@@ -49,7 +47,6 @@ const SongPage = () => {
     return renderedBuffer;
   };
 
-  // Helper function to convert AudioBuffer to WAV
   const audioBufferToWav = (buffer) => {
     const numChannels = buffer.numberOfChannels;
     const sampleRate = buffer.sampleRate;
@@ -66,7 +63,6 @@ const SongPage = () => {
     const arrayBuffer = new ArrayBuffer(totalSize);
     const view = new DataView(arrayBuffer);
 
-    // Write WAV header
     writeString(view, 0, 'RIFF');
     view.setUint32(4, totalSize - 8, true);
     writeString(view, 8, 'WAVE');
@@ -81,7 +77,6 @@ const SongPage = () => {
     writeString(view, 36, 'data');
     view.setUint32(40, dataSize, true);
 
-    // Write audio data
     const offset = 44;
     const channelData = [];
     for (let i = 0; i < numChannels; i++) {
@@ -101,49 +96,39 @@ const SongPage = () => {
     return new Blob([arrayBuffer], { type: 'audio/wav' });
   };
 
-  // Helper function to write string to DataView
   const writeString = (view, offset, string) => {
     for (let i = 0; i < string.length; i++) {
       view.setUint8(offset + i, string.charCodeAt(i));
     }
   };
 
-  // Add toast notification function
-  const showToast = (message, type = 'info') => {
-    const toast = document.createElement('div');
-    toast.className = `download-toast ${type}`;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-
-    // Remove toast after 3 seconds
-    setTimeout(() => {
-      toast.classList.add('fade-out');
-      setTimeout(() => {
-        document.body.removeChild(toast);
-      }, 300);
-    }, 3000);
-  };
-
   useEffect(() => {
-    const foundSong = songs.find(s => s.id === id);
-    if (foundSong) {
-      setSong(foundSong);
-      loadDuration(foundSong);
-      
-      // Find songs from the same movie only
-      const sameMovieSongs = songs.filter(s => 
-        s.id !== foundSong.id && 
-        s.movieName === foundSong.movieName
-      );
-      
-      setRelatedSongs({
-        sameMovie: sameMovieSongs,
-        sameArtist: [], // Clear these as we're only showing same movie songs
-        sameGenre: []
-      });
-    } else {
-      navigate('/');
-    }
+    const load = async () => {
+      try {
+        const all = await songsApi.getAll();
+        const mapped = mapBackendSongs(all);
+        const found = mapped.find(s => s.id === String(id));
+        if (!found) {
+          navigate('/');
+          return;
+        }
+        setSong(found);
+        await loadDuration(found);
+
+        const movieSongsRaw = await songsApi.getByMovie(encodeURIComponent(found.movieName));
+        const movieSongs = mapBackendSongs(movieSongsRaw).filter(s => s.id !== found.id);
+
+        setRelatedSongs({
+          sameMovie: movieSongs,
+          sameArtist: [],
+          sameGenre: []
+        });
+      } catch (e) {
+        console.error('Failed to load song:', e);
+        navigate('/');
+      }
+    };
+    load();
   }, [id, navigate]);
 
   const loadDuration = async (song) => {
@@ -179,7 +164,6 @@ const SongPage = () => {
   };
 
   const handleSongCardClick = (e) => {
-    // Only play if the click is not on an action button
     if (!e.target.closest('.song-actions')) {
       handlePlayClick(e);
     }
@@ -201,7 +185,6 @@ const SongPage = () => {
 
   const handleRelatedSongClick = (relatedSong, e) => {
     e.stopPropagation();
-    // Only play if the click is not on an action button
     if (!e.target.closest('.song-actions')) {
       setPlaylist([relatedSong]);
       setIsPlaying(true);
@@ -215,23 +198,13 @@ const SongPage = () => {
   const handleDownload = async (quality) => {
     try {
       showToast('Preparing download...', 'info');
-
-      // Fetch the original audio file
       const response = await fetch(selectedSong.audioSrc);
       const arrayBuffer = await response.arrayBuffer();
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
-      // Calculate target size in bytes
       const targetSize = parseSizeToBytes(quality.size);
-      
-      // Compress the audio to match the target size
       const compressedBuffer = await compressAudio(audioBuffer, targetSize);
-      
-      // Create WAV file
       const wavBlob = audioBufferToWav(compressedBuffer);
-      
-      // Create download link
       const url = URL.createObjectURL(wavBlob);
       const a = document.createElement('a');
       a.href = url;
@@ -240,7 +213,6 @@ const SongPage = () => {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-
       showToast('Download complete!', 'success');
     } catch (error) {
       console.error('Download error:', error);
@@ -279,17 +251,13 @@ const SongPage = () => {
     event.stopPropagation();
     addToPlaylist(song);
     setTimeout(() => {
-      // Remove the song from the playlist
       setPlaylist(playlist => playlist.filter(s => s.id !== song.id));
     }, 2000);
   };
 
   if (!song) return null;
 
-  // Check if there are any songs from the same movie
   const hasSameMovieSongs = relatedSongs.sameMovie.length > 0;
-  
-  // Check if there are any songs from the same artist or genre
   const hasRelatedSongs = relatedSongs.sameArtist.length > 0 || relatedSongs.sameGenre.length > 0;
 
   return (
@@ -357,7 +325,6 @@ const SongPage = () => {
                 key={relatedSong.id} 
                 className="song-card"
                 onClick={(e) => {
-                  // Only play if not clicking on buttons
                   if (!e.target.closest('.song-actions') && 
                       !e.target.closest('.add-download') && 
                       !e.target.closest('.action-button')) {
@@ -401,7 +368,7 @@ const SongPage = () => {
                     >
                       <PiDownloadSimple />
                     </button>
-                    <span className="duration">{duration || relatedSong.duration}</span>
+                    <span className="duration">{relatedSong.duration}</span>
                   </div>
                 </div>
               </div>
@@ -419,7 +386,6 @@ const SongPage = () => {
                 key={relatedSong.id} 
                 className="song-card"
                 onClick={(e) => {
-                  // Only play if not clicking on buttons
                   if (!e.target.closest('.song-actions') && 
                       !e.target.closest('.add-download') && 
                       !e.target.closest('.action-button')) {
@@ -463,7 +429,7 @@ const SongPage = () => {
                     >
                       <PiDownloadSimple />
                     </button>
-                    <span className="duration">{duration || relatedSong.duration}</span>
+                    <span className="duration">{relatedSong.duration}</span>
                   </div>
                 </div>
               </div>
@@ -472,7 +438,6 @@ const SongPage = () => {
         </div>
       )}
 
-      {/* Download Quality Modal */}
       <DownloadQualityDropdown
         isOpen={showQualityModal}
         onClose={() => setShowQualityModal(false)}

@@ -1,6 +1,5 @@
 // PlayerContext.jsx
 import React, { createContext, useState, useRef, useEffect } from "react";
-import { songs } from "./data";
 
 export const PlayerContext = createContext();
 

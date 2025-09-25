@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { genres, songs } from '../data';
 import { usePlayer } from '../PlayerContext';
 import { useLibrary } from '../LibraryContext';
 import { PiPlay, PiPause, PiHeart, PiPlus } from 'react-icons/pi';
 import './Genres.css';
+import { songsApi, mapBackendSongs } from '../api';
 
-// Function to remove duplicates based on song properties
 function getUniqueSongs(songArray) {
   return songArray.filter((value, index, self) =>
     index === self.findIndex((t) => (
@@ -22,29 +21,36 @@ const Genres = () => {
   const [selectedGenre, setSelectedGenre] = useState(null);
   const [genreSongs, setGenreSongs] = useState([]);
   const [durations, setDurations] = useState({});
+  const [genreList, setGenreList] = useState([]);
 
   useEffect(() => {
-    if (selectedGenre) {
-      // Get the genre name from the selected genre key
-      const genreName = genres[selectedGenre].name;
-      
-      console.log(`Selected genre key: ${selectedGenre}`);
-      console.log(`Genre name: ${genreName}`);
-      
-      // Get songs for this genre
-      const songsForGenre = songs.filter(song => song.genre === genreName);
-      
-      console.log(`Songs for ${genreName}:`, songsForGenre.map(s => s.title));
-      
-      // Remove duplicates
-      const uniqueSongs = getUniqueSongs(songsForGenre);
-      
-      console.log(`Total songs for ${genreName}: ${uniqueSongs.length}`);
-      console.log(`Songs:`, uniqueSongs.map(s => s.title));
-      
-      setGenreSongs(uniqueSongs);
-      loadDurations(uniqueSongs);
-    }
+    let mounted = true;
+    songsApi.getAll()
+      .then(data => {
+        if (!mounted) return;
+        const mapped = mapBackendSongs(data);
+        const setG = new Set();
+        mapped.forEach(s => { if (s.genre) setG.add(s.genre); });
+        setGenreList(Array.from(setG));
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
+    const fetchGenreSongs = async () => {
+      if (!selectedGenre) return;
+      try {
+        const data = await songsApi.getByGenre(selectedGenre);
+        const mapped = mapBackendSongs(data);
+        const unique = getUniqueSongs(mapped);
+        setGenreSongs(unique);
+        loadDurations(unique);
+      } catch (e) {
+        console.error('Failed to fetch genre songs:', e);
+        setGenreSongs([]);
+      }
+    };
+    fetchGenreSongs();
   }, [selectedGenre]);
 
   const loadDurations = async (songs) => {
@@ -106,21 +112,19 @@ const Genres = () => {
 
   const formatDuration = (song) => {
     return durations[song.id] || song.duration || '0:00';
-  };
+    };
 
   return (
     <div className="genres-page">
       <div className="genres-grid">
-        {Object.entries(genres).map(([key, genre]) => (
+        {genreList.map((name) => (
           <div
-            key={key}
-            className={`genre-card ${selectedGenre === key ? 'selected' : ''}`}
-            onClick={() => handleGenreClick(key)}
+            key={name}
+            className={`genre-card ${selectedGenre === name ? 'selected' : ''}`}
+            onClick={() => handleGenreClick(name)}
           >
-            <img src={genre.image} alt={genre.name} className="genre-image" />
             <div className="genre-info">
-              <h3>{genre.name}</h3>
-              <p>{genre.songs.length} songs</p>
+              <h3>{name}</h3>
             </div>
           </div>
         ))}
@@ -128,7 +132,7 @@ const Genres = () => {
 
       {selectedGenre && (
         <div className="genre-songs">
-          <h2>{genres[selectedGenre].name} Songs</h2>
+          <h2>{selectedGenre} Songs</h2>
           <div className="songs-list">
             {genreSongs.length > 0 ? (
               genreSongs.map((song) => (

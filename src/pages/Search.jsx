@@ -3,11 +3,12 @@ import { PiMagnifyingGlass, PiSliders, PiX, PiPlayCircle, PiPauseCircle, PiHeart
 import { LibraryContext } from '../contexts/LibraryContext';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Search.css';
-import { songs, searchSongs, genres, categories } from '../data';
+import { songsApi, mapBackendSongs } from '../api';
 
 const Search = () => {
   const navigate = useNavigate();
   const { addToLibrary, removeFromLibrary, likedSongs, setLikedSongs } = useContext(LibraryContext);
+  const [allSongs, setAllSongs] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -22,17 +23,11 @@ const Search = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [currentlyPlaying, setCurrentlyPlaying] = useState(null);
 
-  // Use categories from data.js
   const categoryOptions = [
-    { id: 'all', name: 'All' },
-    { id: categories.MOVIES, name: 'Movies' },
-    { id: categories.ALBUMS, name: 'Albums' },
-    { id: categories.PLAYLISTS, name: 'Playlists' },
-    { id: categories.GENRES, name: 'Genres' }
+    { id: 'all', name: 'All' }
   ];
 
-  // Use genres from data.js
-  const genreOptions = ['All', ...Object.values(genres)];
+  const genreOptions = ['All'];
 
   const years = [
     'All', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016'
@@ -46,37 +41,43 @@ const Search = () => {
   }, []);
 
   useEffect(() => {
+    let mounted = true;
+    songsApi.getAll()
+      .then(data => mounted && setAllSongs(mapBackendSongs(data)))
+      .catch(err => {
+        console.error('Failed to fetch songs:', err);
+        if (mounted) setAllSongs([]);
+      });
+    return () => { mounted = false; };
+  }, []);
+
+  useEffect(() => {
     if (searchQuery.trim()) {
       setIsSearching(true);
-      // Use the searchSongs function from data.js
-      const results = searchSongs(searchQuery);
-      
-      // Apply filters
-      let filteredResults = results;
-      
+      const q = searchQuery.toLowerCase();
+      let results = allSongs.filter(song => {
+        const searchableText = `${song.title} ${song.artist} ${song.movieName} ${song.genre} ${song.year}`.toLowerCase();
+        return q.split(' ').every(term => searchableText.includes(term));
+      });
+
       if (filters.genre !== 'all') {
-        filteredResults = filteredResults.filter(song => song.genre === filters.genre);
+        results = results.filter(song => song.genre === filters.genre);
       }
-      
       if (filters.year !== 'all') {
-        filteredResults = filteredResults.filter(song => song.year.toString() === filters.year);
+        results = results.filter(song => String(song.year) === filters.year);
       }
-      
-      // Sort results
-      if (filters.sortBy === 'relevance') {
-        // Results are already sorted by relevance from searchSongs
-      } else if (filters.sortBy === 'title') {
-        filteredResults.sort((a, b) => a.title.localeCompare(b.title));
+
+      if (filters.sortBy === 'title') {
+        results.sort((a, b) => a.title.localeCompare(b.title));
       } else if (filters.sortBy === 'artist') {
-        filteredResults.sort((a, b) => a.artist.localeCompare(b.artist));
+        results.sort((a, b) => a.artist.localeCompare(b.artist));
       } else if (filters.sortBy === 'year') {
-        filteredResults.sort((a, b) => b.year - a.year);
+        results.sort((a, b) => b.year - a.year);
       }
-      
-      setSearchResults(filteredResults);
+
+      setSearchResults(results);
       setIsSearching(false);
-      
-      // Save to recent searches
+
       if (!recentSearches.includes(searchQuery)) {
         const updatedSearches = [searchQuery, ...recentSearches].slice(0, 5);
         setRecentSearches(updatedSearches);
@@ -85,7 +86,7 @@ const Search = () => {
     } else {
       setSearchResults([]);
     }
-  }, [searchQuery, filters]);
+  }, [searchQuery, filters, allSongs]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -100,7 +101,6 @@ const Search = () => {
 
   const handlePlayPause = (song) => {
     setCurrentlyPlaying(song);
-    // Implement play/pause functionality
   };
 
   const handleAddToLibrary = (song) => {
@@ -120,8 +120,7 @@ const Search = () => {
       }
 
       const isCurrentlyLiked = likedSongs.some(s => s.id === song.id);
-      
-      // Prepare the song data
+
       const songData = {
         songId: parseInt(song.id),
         songTitle: song.title,
@@ -131,7 +130,6 @@ const Search = () => {
         audioSrc: song.audioSrc
       };
 
-      // Make API call to toggle like status
       const response = await fetch('/api/liked-songs/toggle', {
         method: 'POST',
         headers: {
@@ -148,7 +146,6 @@ const Search = () => {
         throw new Error('Failed to toggle like status');
       }
 
-      // Update local state
       if (isCurrentlyLiked) {
         setLikedSongs(prev => prev.filter(s => s.id !== song.id));
       } else {
@@ -163,14 +160,11 @@ const Search = () => {
     return likedSongs.some(song => song.id === songId);
   };
 
-  // Add toast notification function
   const showToast = (message, type = 'info') => {
     const toast = document.createElement('div');
     toast.className = `download-toast ${type}`;
     toast.textContent = message;
     document.body.appendChild(toast);
-
-    // Remove toast after 3 seconds
     setTimeout(() => {
       toast.classList.add('fade-out');
       setTimeout(() => {
@@ -182,15 +176,6 @@ const Search = () => {
   const clearSearch = () => {
     setSearchQuery('');
     setSearchResults([]);
-  };
-
-  const clearFilters = () => {
-    setFilters({
-      genre: 'all',
-      year: 'all',
-      duration: 'all',
-      sortBy: 'relevance'
-    });
   };
 
   const renderSearchResults = () => {
@@ -223,7 +208,7 @@ const Search = () => {
                   <h3>{song.title}</h3>
                   <p className="artist-name" style={{ color: 'green', cursor: 'pointer' }}>{song.artist}</p>
                   <p className="song-meta">
-                    {song.album} • {song.year}
+                    {song.movieName} • {song.year}
                   </p>
                 </div>
               </div>
@@ -275,17 +260,7 @@ const Search = () => {
     return (
       <div className="search-suggestions">
         <h3>Try searching for</h3>
-        <div className="suggestion-tags">
-          {Object.values(genres).slice(0, 5).map((genre, index) => (
-            <button 
-              key={index}
-              className="suggestion-tag"
-              onClick={() => handleSearch(genre)}
-            >
-              {genre}
-            </button>
-          ))}
-        </div>
+        <div className="suggestion-tags"></div>
       </div>
     );
   };
@@ -325,8 +300,8 @@ const Search = () => {
               value={filters.genre}
               onChange={(e) => handleFilterChange('genre', e.target.value)}
             >
-              {genreOptions.map(genre => (
-                <option key={genre} value={genre}>{genre}</option>
+              {['All', ...Array.from(new Set(allSongs.map(s => s.genre).filter(Boolean)))].map(genre => (
+                <option key={genre} value={genre === 'All' ? 'all' : genre}>{genre}</option>
               ))}
             </select>
           </div>
@@ -356,7 +331,7 @@ const Search = () => {
             </select>
           </div>
           
-          <button className="clear-filters" onClick={clearFilters}>
+          <button className="clear-filters" onClick={clearSearch}>
             Clear Filters
           </button>
         </div>
