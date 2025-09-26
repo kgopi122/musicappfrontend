@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || 'http://localhost:8080/api';
+const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL) || 'http://100.27.215.96:8080/api';
 const MEDIA_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_MEDIA_BASE_URL) || '';
 
 function normalizeUrl(url) {
