@@ -172,7 +172,7 @@ const Login = () => {
               
               setUser(username.value);
               
-              window.location.replace("/music");
+              window.location.replace("/");
             })
             .catch(error => {
               console.error("Error fetching user details:", error);
